@@ -1,7 +1,9 @@
 package cz.secda1.test1;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class TestUtils {
 
@@ -13,7 +15,7 @@ public class TestUtils {
      * @return
      */
     public static List<LunchItem> todaysMenu(List<LunchItem> items, String todayDate) {
-        return null;
+        return items.stream().filter(list -> list.getDate().equals(todayDate)).collect(Collectors.toList());
     }
 
     /**
@@ -24,7 +26,7 @@ public class TestUtils {
      * @return
      */
     public static List<String> todaysMenuFilterNames(List<LunchItem> items, String todayDate) {
-        return null;
+        return items.stream().filter(list -> list.getDate().equals(todayDate)).map(LunchItem::getName).collect(Collectors.toList());
     }
 
     /**
@@ -34,7 +36,7 @@ public class TestUtils {
      * @return
      */
     public static List<String> getAllMainDishesSorted(List<LunchItem> items) {
-        return null;
+        return items.stream().filter(list -> list.getKind().equals(LunchItemKind.MAIN_DISH)).sorted(Comparator.comparing(LunchItem::getName)).map(LunchItem::getName).collect(Collectors.toList());
     }
 
     /**
@@ -44,7 +46,7 @@ public class TestUtils {
      * @return
      */
     public static List<String> getAllMainDishesWithoutAllergens(List<LunchItem> items) {
-        return null;
+        return items.stream().filter(list -> list.getKind().equals(LunchItemKind.MAIN_DISH)).filter(list -> list.getAllergens().isEmpty()).map(LunchItem::getName).collect(Collectors.toList());
     }
 
     /**
@@ -54,7 +56,7 @@ public class TestUtils {
      * @return
      */
     public static List<String> getDatesWhenDrinkIsFruitDrinkOrSyrup(List<LunchItem> items) {
-        return null;
+        return items.stream().filter(list -> list.getKind().equals(LunchItemKind.DRINK)).filter(list -> list.getName().contains("Sirup") || list.getName().contains("Ovocný nápoj")).map(LunchItem::getDate).collect(Collectors.toList());
     }
 
 
@@ -67,7 +69,7 @@ public class TestUtils {
      * @example: "oběd1: Vepřová plec na žampiónech, rýže"
      */
     public static List<String> getAllOrderedDishes(List<LunchItem> items) {
-        return null;
+      return items.stream().filter(list -> list.isOrdered()).map(lunchItem -> String.format("%s: %s", lunchItem.getMenuOption(), lunchItem.getName())).collect(Collectors.toList());
     }
 
     /**
@@ -77,7 +79,7 @@ public class TestUtils {
      * @return
      */
     public static Double getSumOfAllOrderedMeals(List<LunchItem> items) {
-        return null;
+        return items.stream().filter(list -> list.isOrdered()).map(LunchItem::getPrice).reduce(Double::sum).orElse(0.0);
     }
 
     /**
@@ -88,7 +90,7 @@ public class TestUtils {
      * @return
      */
     public static Map<String, List<LunchItem>> groupMealsByDate(List<LunchItem> items) {
-        return null;
+        return items.stream().collect(Collectors.groupingBy(LunchItem::getDate, Collectors.toList()));
     }
 
     /**
@@ -99,6 +101,6 @@ public class TestUtils {
      * @return
      */
     public static Map<List<Allergen>, List<LunchItem>> groupMealsByAllergens(List<LunchItem> items) {
-        return null;
+        return items.stream().collect(Collectors.groupingBy(LunchItem::getAllergens, Collectors.toList()));
     }
 }
